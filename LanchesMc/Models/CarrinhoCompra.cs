@@ -1,4 +1,5 @@
 ﻿using LanchesMc.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace LanchesMc.Models
 {
@@ -62,6 +63,61 @@ namespace LanchesMc.Models
             _context.SaveChanges();
         }
 
+        public int RemoverDoCarrinho(Lanche lanche)
+        {
+            var carrinhoCompraItem = _context.CarrinhoCompraItems.SingleOrDefault
+            (
+                s => s.Lanche.LancheId == lanche.LancheId &&
+                     s.CarrinhoCompraId == CarrinhoCompraId
+            );
 
+            var quantidadeLocal = 0;
+
+            if (carrinhoCompraItem != null)
+            {
+                if (carrinhoCompraItem.Quantidade > 1)
+                {
+                    carrinhoCompraItem.Quantidade--;
+                    quantidadeLocal = carrinhoCompraItem.Quantidade;
+                }
+                else
+                {
+                    _context.CarrinhoCompraItems.Remove(carrinhoCompraItem);
+                }
+            }
+
+            _context.SaveChanges();
+            return quantidadeLocal;
+        }
+
+        public List<CarrinhoCompraItem> GetCarrinhoCompraItems()
+        {
+            return CarrinhoCompraItems ??
+                   (
+                       _context.CarrinhoCompraItems
+                       .Where(c =>c.CarrinhoCompraId == CarrinhoCompraId)
+                       .Include(s=>s.Lanche)
+                       .ToList()
+                   
+                   );
+        }
+
+        public void LimparCarrinho()
+        {
+            var carrinhoItens = _context.CarrinhoCompraItems
+                .Where(carrinho => carrinho.CarrinhoCompraId == CarrinhoCompraId);
+            _context.CarrinhoCompraItems.RemoveRange(carrinhoItens);
+
+            _context.SaveChanges();
+        }
+
+        public decimal GetCarrinhoCompraTotal()
+        {
+            var total = _context.CarrinhoCompraItems
+                .Where(c => c.CarrinhoCompraId == CarrinhoCompraId)
+                .Select(c => c.Lanche.Preco * c.Quantidade).Sum();
+
+            return total;
+        }
     }
 }
