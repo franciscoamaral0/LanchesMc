@@ -15,6 +15,9 @@ namespace LanchesMc.Components
         public IViewComponentResult Invoke()
         {
            var categorias= _categoriaRepository.Categorias.OrderBy(l => l.CategoriaNome);
+
+           
+           
            return View(categorias);
         }
 
