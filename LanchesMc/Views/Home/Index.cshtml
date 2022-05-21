@@ -4,14 +4,58 @@
 @model HomeViewModel
 
 
-<partial name="_Carousel"/>
+<div class="row text-center">
+    <h2>Lanches</h2>
+</div>
 
-<h4>Os Lanches preferidos da semana: </h4>
-<div class="row">
-        
-
-    @foreach (var lanche in Model.LanchesPreferidos)
-    {
-        <partial name="_LanchesResumo" for="@lanche"/>
-    }
+<div class="container">
+    <section id="sobre">
+        <div class="row justify-content-center">
+            <div class="col-xs-12 col-sm-6 col-md-3 text-center">
+                <img src="~/Images/leiaute/icons8-love-50.png"/>
+                <h3>Feito com Amor</h3>
+                <p class="text-muted">Fazemos seu lanche com carinho.</p>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-3 text-center">
+                <img src="~/Images/leiaute/icons8-get-dressed-50.png"/>
+                <h3>Prontos para entrega</h3>
+                <p class="text-muted">Entregamos seu pedido.</p>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-3 text-center">
+                <img src="~/Images/leiaute/icons8-desconto-48.png"/>
+                <h3>Bons preços</h3>
+                <p class="text-muted">Promoções imperdiveis.</p>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-3 text-center">
+                <img src="~/Images/leiaute/icons8-comida-natural-50.png"/>
+                <h3>Lanches saudaveis</h3>
+                <p class="text-muted">Saudáveis e naturais...</p>
+            </div>
+        </div>
+    </section>
+    
+    <section id="portfolio">
+        @await  Html.PartialAsync("_IndexPartial")
+    </section>
+    
+    <section id="contato">
+        <div class="row">
+            <div class="col-10 col-md-5 col-lg-5 offset-1" style="color: black">
+                <h4>&copy; 2022 - LanchesMc</h4>
+                <p class="text-justify">
+                    Aqui você encontra aquele lanche gostoso que da água na boca.
+                    Aquela sobremesa saborasa e para acompanhar a sua bebida preferida.
+                    E se você é vegetariano, tambem vai encontrar comidas saudaves.
+                </p>
+            </div>
+            <div class="col-10 col-md-5 col-lg-5 offset-1" style="color: black">
+                <h4>Tem alguma dúvida?</h4>
+                <ul class="list-unstyled">
+                    <li class="py-1">Rua do barreiro 344</li>
+                    <li class="py-1">+351 999999999</li>
+                    <li class="py-1"><a href="lanches@LanchesMc.com" style="color: blue">Envie-nos um email.</a></li>
+                </ul>
+            </div>
+        </div>
+    </section>
 </div>

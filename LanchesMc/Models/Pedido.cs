@@ -21,7 +21,7 @@ namespace LanchesMc.Models
         [Display(Name = "Complemento")]
         public string Endereco2 { get; set; }
         [Required(ErrorMessage = "Informe o Cep")]
-        [Display(Name = "Endereço")]
+        [Display(Name = "Cep")]
         [StringLength(10, MinimumLength = 8)]
         public string Cep { get; set; }
         [StringLength(10)]
