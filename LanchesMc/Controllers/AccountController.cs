@@ -1,4 +1,5 @@
-﻿using LanchesMc.ViewModels;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using LanchesMc.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,11 +9,13 @@ namespace LanchesMc.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        public IToastifyService _notifyService { get; }
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IToastifyService notifyService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _notifyService = notifyService;
         }
         
         public IActionResult Login(string returnUrl)
@@ -47,6 +50,46 @@ namespace LanchesMc.Controllers
             }
             ModelState.AddModelError("", "Falha ao realizar o login!");
             return View(loginVM);
+        }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(LoginViewModel registoVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var userRegister = new IdentityUser {UserName = registoVM.UserName};
+                var result = await _userManager.CreateAsync(userRegister, registoVM.Password);
+
+                if (result.Succeeded)
+                {
+                    //await _signInManager.SignInAsync(userRegister, isPersistent: false);
+                    _notifyService.Success("Registrado com sucesso :) ");
+                    return RedirectToAction("Login", "Account");
+                }
+                else
+                {
+                    this.ModelState.AddModelError("Registro", "Falha ao registar o usuário");
+                    _notifyService.Error("Erro ao registrar :( ");
+                }
+            }
+
+            return View(registoVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            HttpContext.Session.Clear();
+            HttpContext.User = null;
+            await _signInManager.SignOutAsync();
+            _notifyService.Information("Logout, ate breve :)");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

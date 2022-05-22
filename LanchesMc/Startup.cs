@@ -1,4 +1,5 @@
-﻿using LanchesMc.Context;
+﻿using AspNetCoreHero.ToastNotification;
+using LanchesMc.Context;
 using LanchesMc.Models;
 using LanchesMc.Repositories;
 using LanchesMc.Repositories.Interfaces;
@@ -20,6 +21,7 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddToastify(config => { config.DurationInSeconds = 3; config.Position = Position.Right; config.Gravity = Gravity.Top; });
         services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         services.AddControllersWithViews();
         services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>()
